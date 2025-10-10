@@ -1,0 +1,16 @@
+.git
+vendor
+node_modules
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+.env
+*.sqlite
+*.sql
+docker-compose.override.yml
+npm-debug.log
+yarn-error.log
+coverage
+.phpunit.result.cache

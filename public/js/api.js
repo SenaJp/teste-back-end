@@ -45,7 +45,7 @@ class ApiHelper {
         try {
             await fetch('/sanctum/csrf-cookie', {
                 method: 'GET',
-                credentials: 'same-origin',
+                credentials: 'include',
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             });
         } catch (e) {
@@ -60,7 +60,7 @@ class ApiHelper {
 
         const config = {
             headers: this.getHeaders(),
-            credentials: 'same-origin',
+            credentials: 'include',
             ...options
         };
 
