@@ -1,89 +1,38 @@
-# Teste prático para Back-End 
-***
+# Teste prático para Back-End — Implementação
 
-Bem-vindo.
+Este repositório contém uma implementação em Laravel 11 com Blade (SPA-like) para gerenciar Produtos e Categorias, com autenticação via Sanctum (cookies stateful) e importação a partir da FakeStore API.
 
-Usarei esse teste para avaliar tecnicamente todas as pessoas que estão participando do nosso processo seletivo para a vaga de desenvolvedor full stack, lembrando que a aplicação de patterns como service e repository e processamento de filas assíncronas com horizon fazem diferença. O prazo de execução é de 3 dias corridos a partir do momento que o teste foi encaminhado para você, se tiver alguma duvida pergunte. O teste deve ter um read-me que explique o projeto e como rodá-lo.
+Principais tecnologias: Laravel 11, Sanctum, Blade + Tailwind, Nginx, MySQL, Docker.
 
-## TL;DR
+## Funcionalidades
 
-- Você deverá criar um comando artisan que se comunicará com uma outra API para importar em seu banco de dados;
-- Você deverá criar o front-end do CRUD (Criação, Leitura, Atualização e Deleção) no sistema de gerenciamento de biblioteca. Você poderá escolher entre utilizar React ou Blade no front-end, junto com bibliotecas de estilização como Tailwind CSS ou Bootstrap.
+- Autenticação (login, registro, logout) e edição de perfil (nome, e-mail, telefone, senha)
+- Produtos: CRUD com validação, soft delete, filtros (nome, categoria, com/sem imagem), ordenação determinística, detalhe
+- Categorias: CRUD com validação
+- Importação: comando `php artisan products:import` (todos) e `--id=<ext_id>` (um); endpoints `POST /api/import/all` e `POST /api/import/{id}` com deduplicação e restauração de soft-deletes
+- Dashboard: métricas via service com checagem de schema (evita erros em migrações)
+- Testes: suite PHPUnit cobrindo flows principais
 
-## Começando
+## Como executar com Docker (Makefile)
 
-**Faça um fork desse projeto para iniciar o desenvolvimento. PRs não serão aceitos.**
+Pré-requisitos: Docker e Docker Compose.
 
-### Configuração do ambiente
+1) Subir e configurar tudo de uma vez:
 
-**Setup laravel conforme a documentação pode usar qualquer opção usando 'Valet, artisan serve ou docker'.**
-
-### Funcionalidades a serem implementadas
-
-Através da inteface o usuário deverá ser capaz de:
-- Fazer login
-- Editar dados pessoais (Email, nome, telefone, imagem de perfil...)
-- Criar categorias
-- Editar categorias
-- Criar produtos
-- Editar produtos
-- Ter uma opção de migrar produtos bem como as categorias da API que será conectada (Requisito explicado logo abaixo).
-
-#### CRUD produtos
-
-Aqui você deverá desenvolver as principais operações para o gerenciamento de um catálogo de produtos, sendo elas:
-
-- Criação
-- Atualização
-- Exclusão
-
-**O produto pode ter até 3 categorias.**
-
-O produto deve ter a seguinte estrutura:
-
-Campo       | Tipo      | Obrigatório   | Pode se repetir
------------ | :------:  | :------:      | :------:
-id          | int       | true          | false
-name        | string    | true          | false        
-price       | float     | true          | true
-decription  | text      | true          | true
-image_url   | url       | false         | true
-
-Os endpoints de criação e atualização devem seguir o seguinte formato de payload:
-
-```json
-{
-    "name": "product name",
-    "price": 109.95,
-    "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    "category": "test",
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
-}
+```
+make setup
 ```
 
-**Importante:** Tanto os endpoints de criação é atualização, deverão ter uma camada de validação dos campos.
+O `setup` cria .env (se precisar), sobe containers, instala deps, gera APP_KEY e migra. E cria um servidor em:
 
-#### Buscas de produtos
+- http://localhost:8080
 
-Para realizar a manutenção de um catálogo de produtos é necessário que o sistema tenha algumas buscas, sendo elas:
-
-- Busca pelos campos `name` e `category` (trazer resultados que batem com ambos os campos).
-- Busca por uma categoria específica.
-- Busca de produtos com e sem imagem.
-- Buscar um produto pelo seu ID único.
-
-#### Importação de produtos de uma API externa
-
-É necessário que o sistema seja capaz de importar produtos que estão em um outro serviço. Deverá ser criado um comando que buscará produtos nessa API e armazenará os resultados para a sua base de dados. 
-
-Sugestão: `php artisan products:import`
-
-Esse comando deverá ter uma opção de importar um único produto da API externa, que será encontrado através de um ID externo.
-
-Sugestão: `php artisan products:import --id=123`
-
-Utilize a seguinte API para importar os produtos: [https://fakestoreapi.com/docs](https://fakestoreapi.com/docs)
+Comandos úteis:
+- `make up` / `make down` / `make destroy`
+- `make migrate` / `make seed` / `make fresh`
+- `make test`
+- `make import` ou `make import-one ID=1`
+- `make logs` / `make app-logs` / `make web-logs`
 
 ---
 
-Se houver dúvidas, por favor, abra uma issue nesse repositório.
