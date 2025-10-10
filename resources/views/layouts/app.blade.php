@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sistema de Gerenciamento de Biblioteca')</title>
+    <title>@yield('title', 'Sistema de Gerenciamento de Produtos')</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -28,7 +28,7 @@
         <nav class="sidebar">
             <div class="p-6">
                 <div class="text-center mb-8">
-                    <h2 class="text-xl font-bold text-white">Sistema de Biblioteca</h2>
+                    <h2 class="text-xl font-bold text-white">Gerenciamento de Produtos</h2>
                 </div>
                 <ul class="space-y-2">
                     <li>

@@ -5,7 +5,7 @@
 @section('content')
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-    <p class="text-gray-600 mt-2">Bem-vindo ao sistema de gerenciamento de biblioteca</p>
+    <p class="text-gray-600 mt-2">Bem-vindo ao sistema de gerenciamento de produtos</p>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

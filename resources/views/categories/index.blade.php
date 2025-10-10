@@ -5,7 +5,7 @@
 @section('content')
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900">Lista de Categorias</h1>
-    <p class="text-gray-600 mt-2">Gerencie todas as categorias da biblioteca</p>
+    <p class="text-gray-600 mt-2">Gerencie todas as categorias da loja</p>
 </div>
 
 <div class="bg-white rounded-lg shadow-md mb-6">
