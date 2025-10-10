@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,34 +23,18 @@ Route::post('/register', [AuthController::class, 'webRegister'])->name('register
 Route::post('/logout', [AuthController::class, 'webLogout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        $totalProducts = \App\Models\Product::count();
-        $totalCategories = \App\Models\Category::count();
-        $productsWithImage = \App\Models\Product::withImage()->count();
-        $productsWithoutImage = \App\Models\Product::withoutImage()->count();
-        $recentProducts = \App\Models\Product::with('categories')->latest()->take(5)->get();
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        return view('dashboard', compact('totalProducts', 'totalCategories', 'productsWithImage', 'productsWithoutImage', 'recentProducts'));
-    })->name('dashboard');
+    Route::view('/profile', 'profile')->name('profile');
 
-    Route::get('/profile', function () {
-        return view('profile');
-    })->name('profile');
-
-    Route::get('/products', function () {
-        return view('products.index');
-    })->name('products.index');
+    Route::view('/products', 'products.index')->name('products.index');
 
     Route::get('/products/{id}', function ($id) {
         return view('products.show', ['id' => $id]);
     })->name('products.show');
 
-    Route::get('/categories', function () {
-        return view('categories.index');
-    })->name('categories.index');
+    Route::view('/categories', 'categories.index')->name('categories.index');
 
-    Route::get('/import', function () {
-        return view('import');
-    })->name('import');
+    Route::view('/import', 'import')->name('import');
 
 });
