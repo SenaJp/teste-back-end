@@ -71,9 +71,13 @@ class ImportController extends Controller
     private function createProduct($productData)
     {
         try {
-            $existingProduct = Product::where('external_id', $productData['id'])->first();
+            $existingProduct = Product::withTrashed()->where('external_id', $productData['id'])->first();
 
             if ($existingProduct) {
+                if ($existingProduct->trashed()) {
+                    $existingProduct->restore();
+                    return $existingProduct;
+                }
                 return false;
             }
 

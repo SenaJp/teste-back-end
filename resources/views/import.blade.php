@@ -110,7 +110,6 @@ async function importAll(btn) {
             <div class="text-xs text-gray-500 mt-2">${new Date().toLocaleString()}</div>
         `);
         showNotification('Importação concluída com sucesso!');
-        setTimeout(() => window.location.reload(), 1500);
     } catch (err) {
         showResult('error', 'Falha na importação', `<div>${err.message || 'Não foi possível importar.'}</div>`);
         showNotification('Erro na importação', 'error');
@@ -140,7 +139,7 @@ async function importSpecific(btn) {
             <div class="text-xs text-gray-500 mt-2">${new Date().toLocaleString()}</div>
         `);
         showNotification('Produto importado com sucesso!');
-        setTimeout(() => window.location.reload(), 1200);
+
     } catch (err) {
         showResult('error', 'Falha ao importar produto', `<div>${err.message || 'Não foi possível importar.'}</div>`);
         showNotification('Erro ao importar produto', 'error');

@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 
 class ProductController extends Controller
 {
@@ -33,73 +35,54 @@ class ProductController extends Controller
             $query->withoutImage();
         }
 
-        $products = $query->paginate(15);
+        $products = $query->orderByDesc('id')->paginate(15);
         return response()->json($products);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreProductRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required|string',
-            'image_url' => 'nullable|url',
-            'categories' => 'nullable|array',
-            'categories.*' => 'integer|exists:categories,id'
-        ]);
-
+        $validated = $request->validated();
         $product = Product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'image_url' => $request->image_url
+            'name' => $validated['name'],
+            'price' => $validated['price'],
+            'description' => $validated['description'],
+            'image_url' => $validated['image_url'] ?? null,
         ]);
 
-        if ($request->has('categories') && is_array($request->categories)) {
-            $product->categories()->attach($request->categories);
+        if (!empty($validated['categories']) && is_array($validated['categories'])) {
+            $product->categories()->attach($validated['categories']);
         }
 
         $product->load('categories');
         return response()->json($product, 201);
     }
 
-    public function show(string $id): JsonResponse
+    public function show(Product $product): JsonResponse
     {
-        $product = Product::with('categories')->findOrFail($id);
+        $product->load('categories');
         return response()->json($product);
     }
 
-    public function update(Request $request, string $id): JsonResponse
+    public function update(UpdateProductRequest $request, Product $product): JsonResponse
     {
-        $product = Product::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'description' => 'required|string',
-            'image_url' => 'nullable|url',
-            'categories' => 'nullable|array',
-            'categories.*' => 'integer|exists:categories,id'
-        ]);
-
+        $validated = $request->validated();
         $product->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'image_url' => $request->image_url
+            'name' => $validated['name'],
+            'price' => $validated['price'],
+            'description' => $validated['description'],
+            'image_url' => $validated['image_url'] ?? null,
         ]);
 
-        if ($request->has('categories') && is_array($request->categories)) {
-            $product->categories()->sync($request->categories);
+        if (array_key_exists('categories', $validated) && is_array($validated['categories'] ?? null)) {
+            $product->categories()->sync($validated['categories']);
         }
 
         $product->load('categories');
         return response()->json($product);
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(Product $product): JsonResponse
     {
-        $product = Product::findOrFail($id);
         $product->delete();
         return response()->json(['message' => 'Product deleted successfully']);
     }
